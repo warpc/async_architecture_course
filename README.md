@@ -4,7 +4,7 @@ Link: https://education.borshev.com/architecture
 
 ## Day 0
 
-![Alt text](Howework-0/BasicArch.png "System architecture v0")
+![Alt text](BasicArch.png "System architecture v0")
 
 Вопросы в рамках задания 0:
 - система позволяет легко вгонять пользователя в долги, просто часто вызывая перераспределение задач;
