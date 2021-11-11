@@ -15,14 +15,14 @@ class User < ApplicationRecord
     user
   end
 
-  def self.update_by_public_id(public_id:, full_name:, position:)
-    user = User.find_by_public_id!(public_id)
-    user.update(full_name: full_name, position: position)
+  def self.update_data_by_public_id(public_id:, full_name:, position:)
+    user = User.find_by_public_id(public_id)
+    user.update(full_name: full_name, position: position) if user
   end
 
-  def self.update_by_public_id(public_id:, role:)
-    user = User.find_by_public_id!(public_id)
-    user.update(role: role)
+  def self.update_role_by_public_id(public_id:, role:)
+    user = User.find_by_public_id(public_id)
+    user.update(role: role) if user
   end
 
   def self.which_to_assign_id
