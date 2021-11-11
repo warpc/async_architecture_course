@@ -25,7 +25,7 @@ Doorkeeper.configure do
     if current_account
       head :forbidden unless current_account.admin?
     else
-      redirect_to sign_in_url
+      redirect_to account_session_path
     end
   end
 
