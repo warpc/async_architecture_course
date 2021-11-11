@@ -4,8 +4,8 @@ module OmniAuth
       option :name, :doorkeeper
 
       option :client_options,
-             site: ENV["DOORKEEPER_APP_URL"],
-             authorize_path: "/oauth/authorize"
+             authorize_url: "http://localhost:8080/oauth/authorize",
+             token_url:     "http://auth:3000/oauth/token"
 
       uid do
         raw_info["public_id"]
@@ -22,7 +22,7 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= access_token.get("/accounts/current.json").parsed
+        @raw_info ||= access_token.get('http://auth:3000/accounts/current.json').parsed
       end
     end
   end
