@@ -18,11 +18,8 @@
       <tr>
         <td><%= task.public_id %></td>
         <td><%= task.description %></td>
-        <td><%= task.creator_id %></td>
-        <td><%= task.assigned_to_id %></td>
-        <td><%= link_to 'Show', task %></td>
-        <td><%= link_to 'Edit', edit_task_path(task) %></td>
-        <td><%= link_to 'Destroy', task, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= task.creator.email %></td>
+        <td><%= task.assigned_to.email %></td>
       </tr>
     <% end %>
   </tbody>
@@ -31,3 +28,11 @@
 <br>
 
 <%= link_to 'New Task', new_task_path %>
+<% if @current_user.manager_access?  %>
+  <%= link_to 'Reassing open tasks', reassign_all_open_tasks_path, method: :post %>
+<% end %>
+<br/>
+<br/>
+<% if @current_user  %>
+  <%= link_to 'Log out', logout_path %>
+<% end %>

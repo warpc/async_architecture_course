@@ -22,7 +22,7 @@ class Account < ApplicationRecord
     employee: 'employee',
   }
 
-  after_create do
+  after_commit do
     account = self
 
     # ----------------------------- produce event -----------------------

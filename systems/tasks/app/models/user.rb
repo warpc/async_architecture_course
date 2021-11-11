@@ -25,8 +25,8 @@ class User < ApplicationRecord
     user.update(role: role)
   end
 
-  def self.which_to_assign
-    User.where(role: 'employee').order(Arel.sql('RANDOM()')).first
+  def self.which_to_assign_id
+    User.where(role: 'employee').order(Arel.sql('RANDOM()')).limit(1).pluck(:id).first
   end
 
   def manager_access?
