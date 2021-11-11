@@ -27,6 +27,18 @@ services:
       - "8081:3000"
     env_file:
       - ./systems/tasks/.env
+  tasks-karafka:
+    build:
+      dockerfile: systems/tasks/Dockerfile
+      context: .
+    volumes:
+      - ./systems/tasks:/app
+    command: /bin/bash -c "bundle exec karafka s"
+    depends_on:
+      - db
+      - kafka
+    env_file:
+      - ./systems/tasks/.env
   db:
     image: "postgres:11.2"
     volumes:
@@ -54,5 +66,18 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "10800:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
 volumes:
   db-data:
