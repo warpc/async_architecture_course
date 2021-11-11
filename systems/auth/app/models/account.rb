@@ -1,3 +1,5 @@
+require 'water_drop_producer'
+
 class Account < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -16,9 +18,8 @@ class Account < ApplicationRecord
 
   enum role: {
     admin: 'admin',
-    accounting_clerk: 'accounting_clerk',
-    repairman: 'repairman',
-    employee: 'employee'
+    manager: 'manager',
+    employee: 'employee',
   }
 
   after_create do
@@ -38,11 +39,8 @@ class Account < ApplicationRecord
         position: account.position
       }
     }
-    result = SchemaRegistry.validate_event(event, 'accounts.created', version: 1)
 
-    if result.success?
-      WaterDrop::SyncProducer.call(event.to_json, topic: 'accounts-stream')
-    end
+    WaterDropProducer.sync_call(event.to_json, topic: 'accounts-stream')
     # --------------------------------------------------------------------
   end
 end
