@@ -31,8 +31,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to @task, notice: "Task was successfully created." }
-        format.json { render :show, status: :created, location: @task }
+        format.html { redirect_to tasks_path, notice: "Task was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @task.errors, status: :unprocessable_entity }
@@ -40,8 +39,8 @@ class TasksController < ApplicationController
     end
   end
 
-  def reassign_tasks
-    Task.reassign_tasks(current_user)
+  def reassign_all_open
+    Task.reassign_all_open(current_user)
 
     redirect_to tasks_path
   end

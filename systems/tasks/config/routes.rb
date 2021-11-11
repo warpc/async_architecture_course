@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :tasks, only: %i[index new create] do
     put 'completed', on: :member
-    post 'reassign_task', on: :collection
+    post 'reassign_all_open', on: :collection
   end
 
   get 'login', to: 'sessions#new', as: 'login'

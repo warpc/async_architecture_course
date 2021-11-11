@@ -3,20 +3,22 @@ class Task < ApplicationRecord
   belongs_to :assigned_to, class_name: "User"
 
   def self.create_task(params:, creator:)
-    Task.create!(
+    task = Task.create!(
       creator: creator,
-      assigned_to: User.which_to_assign,
+      assigned_to_id: User.which_to_assign_id,
       is_completed: false,
       description: params[:description]
     )
-    bi_notify_new_assign
+    task.bi_notify_new_assign
+
+    task
   end
 
-  def self.reassign_tasks(initiator)
-    Tasks.where(is_completed: false).find_each(100) { |t| t.assign_to_user }
+  def self.reassign_all_open(initiator)
+    where(is_completed: false).find_each { |t| t.assign_to_user }
 
     event = {
-      **self.class.tasks_event_data,
+      **tasks_event_data,
       event_name: 'TaskReassigned',
       data: {
         reassigned_by: {
@@ -38,7 +40,7 @@ class Task < ApplicationRecord
   end
 
   def assign_to_user
-    task.update(assigned_to: User.which_to_assign)
+    update(assigned_to_id: User.which_to_assign_id)
     bi_notify_new_assign
   end
 
