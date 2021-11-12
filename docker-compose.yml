@@ -6,7 +6,7 @@ services:
       context: .
     volumes:
       - ./systems/auth:/app
-    command: /bin/bash -c "rm -f /app/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
+    command: /bin/bash -c "rm -f /app/tmp/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
     depends_on:
       - db
       - kafka
@@ -18,12 +18,15 @@ services:
       context: .
     volumes:
       - ./systems/tasks:/app
-    command: /bin/bash -c "rm -f /app/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
+    command: /bin/bash -c "rm -f /app/tmp/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
     depends_on:
       - db
       - kafka
+      - auth
     ports:
-      - "8081:2300"
+      - "8081:3000"
+    env_file:
+      - ./systems/tasks/.env
   db:
     image: "postgres:11.2"
     volumes:
