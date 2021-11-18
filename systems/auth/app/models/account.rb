@@ -40,7 +40,7 @@ class Account < ApplicationRecord
       }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'accounts-stream')
+    WaterDropProducer.sync_call(event.to_json, topic: 'accounts_stream')
     # --------------------------------------------------------------------
   end
 end

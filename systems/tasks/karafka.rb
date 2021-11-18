@@ -45,7 +45,7 @@ class KarafkaApp < Karafka::App
   end
 
   consumer_groups.draw do
-    topic :'account-streams' do
+    topic :'account_streams' do
       consumer AccountChanges
     end
 

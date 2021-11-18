@@ -41,7 +41,7 @@ class AccountsController < ApplicationController
             position: @account.position
           }
         }
-        WaterDropProducer.sync_call(event.to_json, topic: 'accounts-stream')
+        WaterDropProducer.sync_call(event.to_json, topic: 'accounts_stream')
 
         # --------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ class AccountsController < ApplicationController
       data: { public_id: @account.public_id }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'accounts-stream')
+    WaterDropProducer.sync_call(event.to_json, topic: 'accounts_stream')
     # --------------------------------------------------------------------
 
     respond_to do |format|

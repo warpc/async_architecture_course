@@ -9,7 +9,7 @@ class Task < ApplicationRecord
       is_completed: false,
       description: params[:description]
     )
-    task.bi_notify_new_assign
+    task.notify_new_assign
 
     task
   end
@@ -27,7 +27,7 @@ class Task < ApplicationRecord
       }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'tasks_life_cycle')
+    WaterDrop::SyncProducer.call(event.to_json, topic: 'tasks_life_cycle')
   end
 
   def self.tasks_event_data
@@ -35,16 +35,16 @@ class Task < ApplicationRecord
       event_id: SecureRandom.uuid,
       event_version: 1,
       event_time: Time.now.to_s,
-      producer: 'tasks_service',
+      producer: 'task_managment_service',
     }
   end
 
   def assign_to_user
     update(assigned_to_id: User.which_to_assign_id)
-    bi_notify_new_assign
+    notify_new_assign
   end
 
-  def bi_notify_new_assign
+  def notify_new_assign
     event = {
       **self.class.tasks_event_data,
       event_name: 'TaskAssigned',
@@ -55,7 +55,7 @@ class Task < ApplicationRecord
         }
       }
     }
-    WaterDropProducer.sync_call(event.to_json, topic: 'tasks_life_cycle')
+    WaterDrop::SyncProducer.call(event.to_json, topic: 'tasks_life_cycle')
   end
 
   def mark_completed
@@ -71,6 +71,6 @@ class Task < ApplicationRecord
       }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'tasks_life_cycle')
+    WaterDrop::SyncProducer.call(event.to_json, topic: 'tasks_life_cycle')
   end
 end

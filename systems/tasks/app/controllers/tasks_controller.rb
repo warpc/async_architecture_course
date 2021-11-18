@@ -27,7 +27,7 @@ class TasksController < ApplicationController
       data: { public_id: @task.public_id, description: @task.description, creator: { public_id: @task.creator.public_id } }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'tasks-stream')
+    WaterDrop::SyncProducer.call(event.to_json, topic: 'tasks_stream')
 
     respond_to do |format|
       if @task.save
