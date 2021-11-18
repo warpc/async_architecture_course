@@ -16,11 +16,6 @@ module Tasks
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
-    config.eager_load_paths << Rails.root.join("lib")
-    require 'omniauth/strategies/doorkeeper'
-
-    middleware.use OmniAuth::Builder do
-      provider :doorkeeper, ENV['TASKS_CLIENT_KEY'], ENV['TASKS_CLIENT_SECRET'], scope: 'public write'
-    end
+    config.autoload_paths += [Rails.root.join('lib')]
   end
 end

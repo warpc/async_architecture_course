@@ -10,7 +10,11 @@ Doorkeeper.configure do
     # raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
     # Put your resource owner authentication logic here.
     # Example implementation:
-    Account.find_by(id: session['warden.user.account.key'].first) || redirect_to(new_account_session_path)
+    unless current_account
+      redirect_to(new_account_session_path)
+    else
+      current_account
+    end
   end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb

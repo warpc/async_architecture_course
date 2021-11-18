@@ -5,14 +5,14 @@ class AccountChanges < ApplicationConsumer
       p message
       puts '-' * 80
 
-      case message['event_name']
+      case message.payload['event_name']
       when 'AccountCreated'
         # TODO: if you want
       when 'AccountUpdated'
-        User.update_by_public_id(
-          public_id: message['data']['public_id'],
-          full_name: message['data']['full_name'],
-          position: message['data']['position']
+        User.update_data_by_public_id(
+          public_id: message.payload['data']['public_id'],
+          full_name: message.payload['data']['full_name'],
+          position: message.payload['data']['position']
         )
       when 'AccountDeleted'
         # TODO: if you want
