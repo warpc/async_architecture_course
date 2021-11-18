@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Public:</strong>
+  <%= @task.public_id %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @task.description %>
+</p>
+
+<p>
+  <strong>Creator:</strong>
+  <%= @task.creator_id %>
+</p>
+
+<p>
+  <strong>Assigned to:</strong>
+  <%= @task.assigned_to_id %>
+</p>
+
+<%= link_to 'Edit', edit_task_path(@task) %> |
+<%= link_to 'Back', tasks_path %>
