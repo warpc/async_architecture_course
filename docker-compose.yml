@@ -39,6 +39,33 @@ services:
       - kafka
     env_file:
       - ./systems/tasks/.env
+  billing:
+    build:
+      dockerfile: systems/billing/Dockerfile
+      context: .
+    volumes:
+      - ./systems/billing:/app
+    command: /bin/bash -c "rm -f /app/tmp/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
+    depends_on:
+      - db
+      - kafka
+      - auth
+    ports:
+      - "8082:3000"
+    env_file:
+      - ./systems/billing/.env
+  billing-karafka:
+    build:
+      dockerfile: systems/billing/Dockerfile
+      context: .
+    volumes:
+      - ./systems/billing:/app
+    command: /bin/bash -c "bundle exec karafka s"
+    depends_on:
+      - db
+      - kafka
+    env_file:
+      - ./systems/billing/.env
   db:
     image: "postgres:11.2"
     volumes:
