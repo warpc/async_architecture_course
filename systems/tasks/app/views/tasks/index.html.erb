@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th>Public</th>
-      <th>Description</th>
+      <th>Title</th>
       <th>Creator</th>
       <th>Assigned to</th>
       <th colspan="3"></th>
@@ -17,7 +17,7 @@
     <% @tasks.each do |task| %>
       <tr>
         <td><%= task.public_id %></td>
-        <td><%= task.description %></td>
+        <td><%= task.title %></td>
         <td><%= task.creator.email %></td>
         <td><%= task.assigned_to.email %></td>
       </tr>

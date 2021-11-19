@@ -24,7 +24,7 @@ class TasksController < ApplicationController
     event = {
       **Task.tasks_event_data,
       event_name: 'TaskCreated',
-      data: { public_id: @task.public_id, description: @task.description, creator: { public_id: @task.creator.public_id } }
+      data: { public_id: @task.public_id, title: @task.title, description: @task.description, creator: { public_id: @task.creator.public_id } }
     }
 
     WaterDrop::SyncProducer.call(event.to_json, topic: 'tasks_stream')
@@ -58,7 +58,7 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:description)
+      params.require(:task).permit(:title, :description)
     end
 
   def check_authentication

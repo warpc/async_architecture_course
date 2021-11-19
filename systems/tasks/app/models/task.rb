@@ -7,6 +7,7 @@ class Task < ApplicationRecord
       creator: creator,
       assigned_to_id: User.which_to_assign_id,
       is_completed: false,
+      title: params[:title],
       description: params[:description]
     )
     task.notify_new_assign
