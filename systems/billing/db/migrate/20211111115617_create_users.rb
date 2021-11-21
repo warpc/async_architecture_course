@@ -3,10 +3,12 @@ class CreateUsers < ActiveRecord::Migration[6.1]
     create_table :users do |t|
       t.uuid :public_id, null: false
       t.string :full_name
-      t.string :role, null: false
+      t.string :role
       t.string :email
+      t.decimal :balance, null: false, default: 0.0
 
       t.timestamps
+      t.index :public_id, unique: true
     end
   end
 end

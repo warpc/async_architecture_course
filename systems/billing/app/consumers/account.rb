@@ -5,11 +5,11 @@ class Accounts < ApplicationConsumer
       p message
       puts '-' * 80
 
-      case message.payload['event_name']
-      when 'AccountRoleChanged'
-        User.update_role_by_public_id(
+      case [message.payload['event_name'], message.payload['event_version']]
+      when ['Account.RoleChanged', 1]
+        User.create_or_update_by_public_id(
           public_id: message.payload['data']['public_id'],
-          role: message.payload['data']['role']
+          params: { role: message.payload['data']['role'] }
         )
       else
         # store events in DB

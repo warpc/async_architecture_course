@@ -5,16 +5,16 @@ class AccountChanges < ApplicationConsumer
       p message
       puts '-' * 80
 
-      case message.payload['event_name']
-      when 'AccountCreated'
+      case [message.payload['event_name'], message.payload['event_version']]
+      when ['Account.Created', 1]
         # TODO: if you want
-      when 'AccountUpdated'
+      when ['Account.Updated', 1]
         User.update_data_by_public_id(
           public_id: message.payload['data']['public_id'],
           full_name: message.payload['data']['full_name'],
           position: message.payload['data']['position']
         )
-      when 'AccountDeleted'
+      when ['Account.Deleted', 1]
         # TODO: if you want
       else
         # store events in DB

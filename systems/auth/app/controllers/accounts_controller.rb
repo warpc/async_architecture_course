@@ -33,7 +33,7 @@ class AccountsController < ApplicationController
         # Events::AccountUpdated.new(payload).to_h.to_json
         event = {
           **account_event_data,
-          event_name: 'AccountUpdated',
+          event_name: 'Account.Updated',
           data: {
             public_id: @account.public_id,
             email: @account.email,
@@ -68,7 +68,7 @@ class AccountsController < ApplicationController
     # ----------------------------- produce event -----------------------
     event = {
       **account_event_data,
-      event_name: 'AccountDeleted',
+      event_name: 'Account.Deleted',
       data: { public_id: @account.public_id }
     }
 
@@ -112,7 +112,7 @@ class AccountsController < ApplicationController
     def produce_be_event(public_id, role)
       event = {
         **account_event_data,
-        event_name: 'AccountRoleChanged',
+        event_name: 'Account.RoleChanged',
         data: { public_id: public_id, role: role }
       }
 

@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   has_many :auth_identities, dependent: :delete_all
+  has_many :transactions
+  has_many :payments
 
   def self.find_or_create_from_auth_hash(provider, payload)
     auth = AuthIdentity.where(provider: provider, login: auth_identity_params(payload)[:login]).first
@@ -13,22 +15,16 @@ class User < ApplicationRecord
     user
   end
 
-  def self.update_data_by_public_id(public_id:, full_name:, position:)
+  def self.create_or_update_by_public_id(public_id:, params: {})
+    user = create_or_find_by!(public_id: public_id)
+    user.with_lock { user.update!(**params) } if data.present?
+
+    user
+  end
+
+  def self.update_data_by_public_id(public_id:, full_name:, email:)
     user = User.find_by_public_id(public_id)
-    user.update(full_name: full_name, position: position) if user
-  end
-
-  def self.update_role_by_public_id(public_id:, role:)
-    user = User.find_by_public_id(public_id)
-    user.update(role: role) if user
-  end
-
-  def self.which_to_assign_id
-    User.where(role: 'employee').order(Arel.sql('RANDOM()')).limit(1).pluck(:id).first
-  end
-
-  def manager_access?
-    role == 'manager' || role == 'admin'
+    user.with_lock { user.update(full_name: full_name, email: email) } if user
   end
 
   def self.auth_identity_params(payload)

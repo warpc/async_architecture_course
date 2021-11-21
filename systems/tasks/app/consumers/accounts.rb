@@ -5,8 +5,8 @@ class Accounts < ApplicationConsumer
       p message
       puts '-' * 80
 
-      case message.payload['event_name']
-      when 'AccountRoleChanged'
+      case [message.payload['event_name'], message.payload['event_version']]
+      when ['Account.RoleChanged', 1]
         User.update_role_by_public_id(
           public_id: message.payload['data']['public_id'],
           role: message.payload['data']['role']
