@@ -7,7 +7,12 @@ class AccountChanges < ApplicationConsumer
 
       case [message.payload['event_name'], message.payload['event_version']]
       when ['Account.Created', 1]
-        # TODO: if you want
+        User.create_or_update_by_public_id(
+          public_id: message.payload['data']['public_id'],
+          params: {
+            email:     message.payload['data']['email'],
+            full_name: message.payload['data']['full_name']
+          })
       when ['Account.Updated', 1]
         User.update_data_by_public_id(
           public_id: message.payload['data']['public_id'],

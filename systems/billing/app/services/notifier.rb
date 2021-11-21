@@ -1,6 +1,6 @@
 class Notifier < ApplicationService
   def self.call(payment:)
-    new(*args).call
+    new(payment: payment).call
   end
 
   def initialize(payment:)

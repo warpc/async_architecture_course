@@ -4,10 +4,10 @@ class TransactionsController < ApplicationController
 
   # GET /transactions or /transactions.json
   def index
-    if current_user.role.include?['manager', 'admin']
+    if ['manager', 'admin'].include? current_user.role
       @company_profit_amount = Transaction.company_profit_amount(Date.current)
     else
-      @transactions = current_user.transactions.includes(:tasks).for_day(Date.current).desc
+      @transactions = current_user.transactions.includes(:task).for_day(Date.current).desc
     end
   end
 

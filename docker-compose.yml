@@ -6,6 +6,7 @@ services:
       context: .
     volumes:
       - ./systems/auth:/app
+      - ./systems/event_schema_registry:/event_schema_registry
     command: /bin/bash -c "rm -f /app/tmp/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
     depends_on:
       - db
@@ -18,6 +19,7 @@ services:
       context: .
     volumes:
       - ./systems/tasks:/app
+      - ./systems/event_schema_registry:/event_schema_registry
     command: /bin/bash -c "rm -f /app/tmp/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
     depends_on:
       - db
@@ -33,6 +35,7 @@ services:
       context: .
     volumes:
       - ./systems/tasks:/app
+      - ./systems/event_schema_registry:/event_schema_registry
     command: /bin/bash -c "bundle exec karafka s"
     depends_on:
       - db
@@ -45,6 +48,7 @@ services:
       context: .
     volumes:
       - ./systems/billing:/app
+      - ./systems/event_schema_registry:/event_schema_registry
     command: /bin/bash -c "rm -f /app/tmp/pids/server.pid && /app/bin/rails s -b 0.0.0.0"
     depends_on:
       - db
@@ -60,6 +64,7 @@ services:
       context: .
     volumes:
       - ./systems/billing:/app
+      - ./systems/event_schema_registry:/event_schema_registry
     command: /bin/bash -c "bundle exec karafka s"
     depends_on:
       - db

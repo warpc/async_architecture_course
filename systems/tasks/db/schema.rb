@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_19_164214) do
+ActiveRecord::Schema.define(version: 2021_11_21_125614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -38,15 +38,17 @@ ActiveRecord::Schema.define(version: 2021_11_19_164214) do
     t.string "title", default: "", null: false
     t.index ["assigned_to_id"], name: "index_tasks_on_assigned_to_id"
     t.index ["creator_id"], name: "index_tasks_on_creator_id"
+    t.index ["public_id"], name: "index_tasks_on_public_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
     t.uuid "public_id", null: false
     t.string "full_name"
-    t.string "role", null: false
+    t.string "role"
     t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["public_id"], name: "index_users_on_public_id", unique: true
   end
 
   add_foreign_key "auth_identities", "users"

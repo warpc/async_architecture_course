@@ -7,8 +7,10 @@
     <tr>
       <th>Public</th>
       <th>Title</th>
+      <th>Description</th>
       <th>Creator</th>
       <th>Assigned to</th>
+      <th>Status</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -18,8 +20,13 @@
       <tr>
         <td><%= task.public_id %></td>
         <td><%= task.title %></td>
+        <td><%= task.description %></td>
         <td><%= task.creator.email %></td>
         <td><%= task.assigned_to.email %></td>
+        <td><%= task.completed? %></td>
+        <% unless task.completed? %>
+          <td><%= link_to 'Mark as completed', completed_task_path(task), method: :put %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
@@ -33,6 +40,3 @@
 <% end %>
 <br/>
 <br/>
-<% if @current_user  %>
-  <%= link_to 'Log out', logout_path %>
-<% end %>

@@ -1,7 +1,7 @@
 module Tasks
   class Saver < ApplicationService
     def self.call(public_id:, params: {})
-      new(*args).call
+      new(public_id: public_id, params: params).call
     end
 
     def initialize(public_id:, params: {})

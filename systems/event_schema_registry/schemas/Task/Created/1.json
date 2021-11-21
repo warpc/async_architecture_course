@@ -19,12 +19,12 @@
         },
         "creator_public_id": {
           "type": ["string"]
-        },
+        }
       },
       "required": [
         "public_id",
         "title",
-        "creator_public_id",
+        "creator_public_id"
       ]
     }
   },

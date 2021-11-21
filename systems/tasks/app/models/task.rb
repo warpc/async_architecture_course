@@ -5,13 +5,17 @@ class Task < ApplicationRecord
   scope :open, -> { where(is_completed: false) }
 
   def self.create_task(params:, creator:)
-    Task.create!(
+    task = Task.create!(
       creator: creator,
       assigned_to_id: User.which_to_assign_id,
       is_completed: false,
       title: params[:title],
       description: params[:description]
     )
+
+    # https://github.com/rails/rails/issues/43279
+    # Wihtout realod public_id will be nil
+    task.reload
   end
 
   def self.all_open
@@ -24,5 +28,9 @@ class Task < ApplicationRecord
 
   def mark_completed
     update(is_completed: true)
+  end
+
+  def completed?
+    is_completed
   end
 end

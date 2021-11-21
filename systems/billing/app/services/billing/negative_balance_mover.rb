@@ -1,7 +1,7 @@
 module Billing
   class NegativeBalanceMover < ApplicationService
     def self.call(user:, negative_debt_amount:, date:)
-      new(*args).call
+      new(user: user, negative_debt_amount: negative_debt_amount, date: date).call
     end
 
     def initialize(user:, negative_debt_amount:, date:)
@@ -19,6 +19,10 @@ module Billing
         )
         @user.save!
       end
+
+      # https://github.com/rails/rails/issues/43279
+      # Wihtout realod public_id will be nil
+      tx.reload
 
       # Move to serializer
       event = {

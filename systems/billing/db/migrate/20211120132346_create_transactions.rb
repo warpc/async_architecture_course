@@ -10,6 +10,7 @@ class CreateTransactions < ActiveRecord::Migration[6.1]
       t.decimal :amount, null: false, default: 0.0
 
       t.timestamps
+      t.index :public_id, unique: true
     end
   end
 end

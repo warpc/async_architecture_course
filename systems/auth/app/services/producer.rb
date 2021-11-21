@@ -13,12 +13,12 @@ class Producer < ApplicationService
       event_id: SecureRandom.uuid,
       event_time: Time.now.to_s,
       # TODO: избегать наименование по сервису. Новое имя?
-      producer: 'billing_service'
+      producer: 'auth_service'
     )
 
     result = SchemaRegistry.validate_event(@event, @event[:event_name], version: @event[:event_version])
     if result.success?
-      WaterDrop::SyncProducer.call(@event.to_json, topic: @topic)
+      WaterDropProducer.sync_call(@event.to_json, topic: @topic)
     else
       Rails.logger.error "Can't produce event  #{@event} to topic #{@topic}"
     end

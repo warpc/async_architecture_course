@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 2021_11_21_104246) do
     t.decimal "company_profit_amount", default: "0.0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["date"], name: "index_billing_cycles_on_date", unique: true
+    t.index ["public_id"], name: "index_billing_cycles_on_public_id", unique: true
   end
 
   create_table "payments", force: :cascade do |t|
@@ -44,6 +46,7 @@ ActiveRecord::Schema.define(version: 2021_11_21_104246) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "billing_cycle_id", null: false
     t.index ["billing_cycle_id"], name: "index_payments_on_billing_cycle_id"
+    t.index ["public_id"], name: "index_payments_on_public_id", unique: true
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -66,6 +69,7 @@ ActiveRecord::Schema.define(version: 2021_11_21_104246) do
     t.decimal "amount", default: "0.0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["public_id"], name: "index_transactions_on_public_id", unique: true
     t.index ["task_id"], name: "index_transactions_on_task_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
@@ -73,10 +77,12 @@ ActiveRecord::Schema.define(version: 2021_11_21_104246) do
   create_table "users", force: :cascade do |t|
     t.uuid "public_id", null: false
     t.string "full_name"
-    t.string "role", null: false
+    t.string "role"
     t.string "email"
+    t.decimal "balance", default: "0.0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["public_id"], name: "index_users_on_public_id", unique: true
   end
 
   add_foreign_key "auth_identities", "users"

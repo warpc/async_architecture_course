@@ -9,6 +9,7 @@ class CreatePayments < ActiveRecord::Migration[6.1]
       t.integer :status, default: 0, null: false
 
       t.timestamps
+      t.index :public_id, unique: true
     end
   end
 end

@@ -1,7 +1,7 @@
 module Tasks
   class Deposit < ApplicationService
     def self.call(task:, completed_by:)
-      new(*args).call
+      new(task: task, completed_by: completed_by).call
     end
 
     def initialize(task:, completed_by:)
@@ -17,10 +17,14 @@ module Tasks
         tx = @completed_by.transactions.create!(
           amount: @task.completed_amount,
           task: @task,
-          reason: "Completed task #{@task.public_id}"
+          reason: "Completed task '#{@task.title}, ID'#{@task.public_id}"
         )
-        completed_by.save!
+        @completed_by.save!
       end
+
+      # https://github.com/rails/rails/issues/43279
+      # Wihtout realod public_id will be nil
+      tx.reload
 
       # Move to serializer
       event = {

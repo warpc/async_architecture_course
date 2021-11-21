@@ -6,6 +6,11 @@ class BillingCyclePeriodCloser < ApplicationService
   def call
     bc = BillingCycle.create(date: Date.yesterday)
     bc.update(company_profit_amount: Transaction.company_profit_amount(bc.date))
+
+    # https://github.com/rails/rails/issues/43279
+    # Wihtout realod public_id will be nil
+    bc.reload
+
     user_ids = Transaction.user_ids_for_billing_period(bc.date)
 
     User.where(id: user_ids).each do |user|
@@ -23,7 +28,7 @@ class BillingCyclePeriodCloser < ApplicationService
       event_name: 'Billing.CycleClosed',
       event_version: 1,
       data: {
-        public_id: bc.uuid,
+        public_id: bc.public_id,
         date: bc.date.to_s,
         company_profit_amount: bc.company_profit_amount.to_s("F")
       }

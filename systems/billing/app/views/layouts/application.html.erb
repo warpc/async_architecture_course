@@ -11,6 +11,15 @@
   </head>
 
   <body>
+  <p>
+  <% if @current_user  %>
+    Current user <%= @current_user.inspect %>
+  <% end %>
+  </p>
+  <br/>
     <%= yield %>
+    <% if @current_user  %>
+      <%= link_to 'Log out', logout_path %>
+    <% end %>
   </body>
 </html>

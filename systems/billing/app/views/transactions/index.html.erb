@@ -2,13 +2,13 @@
 
 <h1>Accounting</h1>
 
-<% if manager_access? %>
+<% if @current_user.manager_access? %>
   <h2> Common statistics </h2>
   <p> Current company profit <%= @company_profit_amount %> $ </p>
-  <p> View statistics data here: </p>
+  <p> View previous data here: <%= link_to 'Billing Cycles', billing_cycles_path %></p>
 <% else %>
   <h2>Balance</h2>
-  <p> <%= current_user.balance %> $ </p>
+  <p> <%= @current_user.balance %> $ </p>
   <br>
   <h2>Audit</h2>
 

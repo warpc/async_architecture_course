@@ -1,7 +1,7 @@
 module Payments
   class Creator < ApplicationService
     def self.call(payment_amount:, user:, billing_cycle:)
-      new(*args).call
+      new(payment_amount: payment_amount, user: user, billing_cycle: billing_cycle).call
     end
 
     def initialize(payment_amount:, user:, billing_cycle:)
@@ -25,6 +25,11 @@ module Payments
         )
         @user.save!
       end
+
+      # https://github.com/rails/rails/issues/43279
+      # Wihtout realod public_id will be nil
+      tx.reload
+      payment.reload
 
       # Move to serializer
       event = {

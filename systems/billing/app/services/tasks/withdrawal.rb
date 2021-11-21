@@ -1,7 +1,7 @@
 module Tasks
   class Withdrawal < ApplicationService
     def self.call(task:, assigned_to:)
-      new(*args).call
+      new(task: task, assigned_to: assigned_to).call
     end
 
     def initialize(task:, assigned_to:)
@@ -16,10 +16,14 @@ module Tasks
         tx = @assigned_to.transactions.create!(
           amount: -@task.assigned_fee,
           task: @task,
-          reason: "Assigned task #{@task.public_id}"
+          reason: "Assigned task '#{@task.title}', ID #{@task.public_id}"
         )
         @assigned_to.save!
       end
+
+      # https://github.com/rails/rails/issues/43279
+      # Wihtout realod public_id will be nil
+      tx.reload
 
       # Move to serializer
       event = {

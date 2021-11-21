@@ -85,6 +85,8 @@ class TasksController < ApplicationController
 
   def completed
     return if @task.assigned_to != current_user
+    return if @task.completed?
+
     @task.mark_completed
 
     event = {
@@ -97,6 +99,8 @@ class TasksController < ApplicationController
     }
 
     Producer.call(event: event, topic: 'tasks_life_cycle')
+
+    redirect_to tasks_path
   end
 
   private

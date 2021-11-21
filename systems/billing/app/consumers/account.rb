@@ -1,4 +1,4 @@
-class Accounts < ApplicationConsumer
+class Account < ApplicationConsumer
   def consume
     params_batch.each do |message|
       puts '-' * 80
