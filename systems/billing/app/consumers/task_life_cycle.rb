@@ -6,7 +6,7 @@ class TaskLifeCycle < ApplicationConsumer
       puts '-' * 80
 
       case [message.payload['event_name'], message.payload['event_version']]
-      when ['Task.Assigned', 1]
+      when ['Task.Assigned', 1], ['Task.CagedBird', 1]
         task = Tasks::Saver.call(public_id: message.payload['data']['public_id'])
 
         assigned_to_id = message.payload.dig('data', 'assigned_to_public_id')
@@ -14,7 +14,7 @@ class TaskLifeCycle < ApplicationConsumer
         Tasks::Withdrawal.call(task: task, assigned_to: assigned_user)
       when ['Task.Reassigned', 1]
         # Do nothing for current moment
-      when ['Task.Completed', 1]
+      when ['Task.Completed', 1], ['Task.MilletInBowl', 1]
         task = Tasks::Saver.call(public_id: message.payload['data']['public_id'])
 
         completed_by_id = message.payload.dig('data', 'completed_by_public_id')

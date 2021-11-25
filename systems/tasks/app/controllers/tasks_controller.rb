@@ -36,7 +36,7 @@ class TasksController < ApplicationController
     Producer.call(event: event, topic: 'tasks_stream')
 
     event = {
-      event_name: 'Task.Assigned',
+      event_name: 'Task.CagedBird',
       event_version: 1,
       data: {
         public_id: @task.public_id,
@@ -61,7 +61,7 @@ class TasksController < ApplicationController
       task.assign_to_user
 
       event = {
-        event_name: 'Task.Assigned',
+        event_name: 'Task.CagedBird',
         event_version: 1,
         data: {
           public_id: task.public_id,
@@ -91,7 +91,7 @@ class TasksController < ApplicationController
     @task.mark_completed
 
     event = {
-      event_name: 'Task.Completed',
+      event_name: 'Task.MilletInBowl',
       event_version: 1,
       data: {
         public_id: @task.public_id,
