@@ -2,6 +2,9 @@ class Task < ApplicationRecord
   belongs_to :creator, class_name: "User"
   belongs_to :assigned_to, class_name: "User"
 
+  validates :title, presence: true
+  validate :jira_in_title
+
   scope :open, -> { where(is_completed: false) }
 
   def self.create_task(params:, creator:)
@@ -32,5 +35,11 @@ class Task < ApplicationRecord
 
   def completed?
     is_completed
+  end
+
+  private
+
+  def jira_in_title
+    errors.add(:title, 'Please use Jira field for jira task id') if title.include?('[') || title.include?(']')
   end
 end

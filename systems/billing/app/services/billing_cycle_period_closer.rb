@@ -1,10 +1,14 @@
 class BillingCyclePeriodCloser < ApplicationService
-  def self.call
-    new.call
+  def self.call(date: Date.yesterday)
+    new(date: date).call
+  end
+
+  def initialize(date:)
+    @date = date
   end
 
   def call
-    bc = BillingCycle.create(date: Date.yesterday)
+    bc = BillingCycle.create(date: @date)
     bc.update(company_profit_amount: Transaction.company_profit_amount(bc.date))
 
     # https://github.com/rails/rails/issues/43279
@@ -14,7 +18,7 @@ class BillingCyclePeriodCloser < ApplicationService
     user_ids = Transaction.user_ids_for_billing_period(bc.date)
 
     User.where(id: user_ids).each do |user|
-      amount = Transaction.for_day(bc.date).where(user_id: user_id).sum(:amount)
+      amount = Transaction.for_day(bc.date).where(user_id: user.id).sum(:amount)
       next if amount == 0
 
       if amount > 0
@@ -34,6 +38,6 @@ class BillingCyclePeriodCloser < ApplicationService
       }
     }
 
-    Producer.call(event: event, topic: 'billing_cycle')
+    Producer.call(event: event, topic: 'billing')
   end
 end

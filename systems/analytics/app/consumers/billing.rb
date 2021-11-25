@@ -7,6 +7,7 @@ class Billing < ApplicationConsumer
 
       case [message.payload['event_name'], message.payload['event_version']]
       when ['Billing.CycleClosed', 1]
+
         date = Date.parse(message.payload.dig('data', 'date'))
         ds = DailyStatistic.create_or_find_by!(date: date)
         Statistic::DailyCalculator.call(daily_statistics: ds, params: message.payload['data'])

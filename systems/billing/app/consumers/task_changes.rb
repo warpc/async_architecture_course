@@ -14,6 +14,15 @@ class TaskChanges < ApplicationConsumer
           description: data['description']
         }
         Tasks::Saver.call(public_id: data['public_id'], params: params)
+      when ['Task.Created', 2]
+        data = message.payload['data']
+        # Ignore creator because we do not have logic with him
+        params = {
+          title: data['title'],
+          jira_id: data['jira_id'],
+          description: data['description']
+        }
+        Tasks::Saver.call(public_id: data['public_id'], params: params)
       else
         # store events in DB
       end

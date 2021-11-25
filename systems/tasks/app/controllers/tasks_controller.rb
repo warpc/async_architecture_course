@@ -23,10 +23,11 @@ class TasksController < ApplicationController
 
     event = {
       event_name: 'Task.Created',
-      event_version: 1,
+      event_version: 2,
       data: {
         public_id: @task.public_id,
         title: @task.title,
+        jira_id: @task.jira_id,
         description: @task.description,
         creator_public_id:  @task.creator.public_id
       }
@@ -111,7 +112,7 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:title, :description)
+      params.require(:task).permit(:title, :description, :jira_id)
     end
 
   def check_authentication
