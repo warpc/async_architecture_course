@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.string :role, null: false
       t.string :email
 
+      t.index :public_id, unique: true
       t.timestamps
     end
   end

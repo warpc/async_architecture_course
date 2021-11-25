@@ -9,6 +9,7 @@ class CreateTasks < ActiveRecord::Migration[6.1]
       t.references :creator, null: false, foreign_key: {to_table: :users}
       t.references :assigned_to, null: false, foreign_key: {to_table: :users}
 
+      t.index :public_id, unique: true
       t.timestamps
     end
   end
