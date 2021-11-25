@@ -35,7 +35,6 @@ gem 'waterdrop'
 gem 'schema_registry', path: '../event_schema_registry/ruby/'
 
 # Cron
-gem 'whenever', require: false
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false

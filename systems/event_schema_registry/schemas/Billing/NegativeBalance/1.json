@@ -19,13 +19,18 @@
         },
         "reason": {
           "type": ["string"]
+        },
+        "date": {
+          "type": "string",
+          "description": "Date"
         }
       },
       "required": [
         "public_id",
         "user_public_id",
         "amount",
-        "reason"
+        "reason",
+        "date"
       ]
     }
   },

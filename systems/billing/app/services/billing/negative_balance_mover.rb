@@ -32,6 +32,7 @@ module Billing
           public_id: tx.public_id,
           user_public_id: tx.user.public_id,
           amount: tx.amount.to_s('F'),
+          date: @date.to_s,
           reason: tx.reason
         }
       }
