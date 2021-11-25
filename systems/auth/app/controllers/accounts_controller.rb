@@ -32,8 +32,7 @@ class AccountsController < ApplicationController
         # ----------------------------- produce event -----------------------
         # Events::AccountUpdated.new(payload).to_h.to_json
         event = {
-          **account_event_data,
-          event_name: 'AccountUpdated',
+          event_name: 'Account.Updated',
           data: {
             public_id: @account.public_id,
             email: @account.email,
@@ -41,11 +40,12 @@ class AccountsController < ApplicationController
             position: @account.position
           }
         }
-        WaterDropProducer.sync_call(event.to_json, topic: 'accounts_stream')
+
+        Producer.call(event: event, topic: 'accounts_stream')
 
         # --------------------------------------------------------------------
 
-        produce_be_event(@account.public_id, new_role) if new_role
+        produce_role_changed_event(@account.public_id, new_role) if new_role
 
         # --------------------------------------------------------------------
 
@@ -67,12 +67,11 @@ class AccountsController < ApplicationController
 
     # ----------------------------- produce event -----------------------
     event = {
-      **account_event_data,
-      event_name: 'AccountDeleted',
+      event_name: 'Account.Deleted',
       data: { public_id: @account.public_id }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'accounts_stream')
+    Producer.call(event: event, topic: 'accounts_stream')
     # --------------------------------------------------------------------
 
     respond_to do |format|
@@ -82,15 +81,6 @@ class AccountsController < ApplicationController
   end
 
   private
-
-    def account_event_data
-      {
-        event_id: SecureRandom.uuid,
-        event_version: 1,
-        event_time: Time.now.to_s,
-        producer: 'auth_service',
-      }
-    end
 
     def current_account
       if doorkeeper_token
@@ -109,13 +99,12 @@ class AccountsController < ApplicationController
       params.require(:account).permit(:full_name, :role)
     end
 
-    def produce_be_event(public_id, role)
+    def produce_role_changed_event(public_id, role)
       event = {
-        **account_event_data,
-        event_name: 'AccountRoleChanged',
+        event_name: 'Account.RoleChanged',
         data: { public_id: public_id, role: role }
       }
 
-      WaterDropProducer.sync_call(event.to_json, topic: 'accounts')
+      Producer.call(event: event, topic: 'accounts')
     end
 end

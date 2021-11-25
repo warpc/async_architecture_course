@@ -1,6 +1,8 @@
 require 'water_drop_producer'
 
 class Account < ApplicationRecord
+  #before_create :attach_uuid
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -23,15 +25,13 @@ class Account < ApplicationRecord
   }
 
   after_commit do
-    account = self
-
+    # This is workaround, because public is not setup correctly in after_commit callback
+    # https://github.com/rails/rails/issues/43279
+    account = self.reload
     # ----------------------------- produce event -----------------------
     event = {
-      event_id: SecureRandom.uuid,
       event_version: 1,
-      event_time: Time.now.to_s,
-      producer: 'auth_service',
-      event_name: 'AccountCreated',
+      event_name: 'Account.Created',
       data: {
         public_id: account.public_id,
         email: account.email,
@@ -40,7 +40,11 @@ class Account < ApplicationRecord
       }
     }
 
-    WaterDropProducer.sync_call(event.to_json, topic: 'accounts_stream')
+    Producer.call(event: event, topic: 'account_streams')
     # --------------------------------------------------------------------
+  end
+
+  def attach_uuid
+    self.public_id = SecureRandom.uuid
   end
 end
