@@ -7,8 +7,11 @@
     <tr>
       <th>Public</th>
       <th>Title</th>
+      <th>Jira ID</th>
+      <th>Description</th>
       <th>Creator</th>
-      <th>Assigned to</th>
+      <th>Какая птичка в клетке</th>
+      <th>Status</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -18,8 +21,18 @@
       <tr>
         <td><%= task.public_id %></td>
         <td><%= task.title %></td>
+        <td><%= task.jira_id %></td>
+        <td><%= task.description %></td>
         <td><%= task.creator.email %></td>
         <td><%= task.assigned_to.email %></td>
+        <% if task.completed? %>
+          <td> Просо в миске </td>
+        <% else %>
+            <td> Птичка в клетке</td>
+        <% end %>
+        <% unless task.completed? %>
+          <td><%= link_to 'Насыпать просо в миску', completed_task_path(task), method: :put %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
@@ -33,6 +46,3 @@
 <% end %>
 <br/>
 <br/>
-<% if @current_user  %>
-  <%= link_to 'Log out', logout_path %>
-<% end %>

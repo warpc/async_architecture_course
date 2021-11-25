@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+
+  "title": "Billing.NegativeBalance.v1",
+  "description": "json schema for BE billing cycle period (version 1)",
+
+  "definitions": {
+    "event_data": {
+      "type": "object",
+      "properties": {
+        "public_id": {
+          "type": "string"
+        },
+        "user_public_id": {
+          "type": ["string"]
+        },
+        "amount": {
+          "type": ["string"]
+        },
+        "reason": {
+          "type": ["string"]
+        },
+        "date": {
+          "type": "string",
+          "description": "Date"
+        }
+      },
+      "required": [
+        "public_id",
+        "user_public_id",
+        "amount",
+        "reason",
+        "date"
+      ]
+    }
+  },
+
+  "type": "object",
+
+  "properties": {
+    "event_id":      { "type": "string" },
+    "event_version": { "enum": [1] },
+    "event_name":    { "enum": ["Billing.NegativeBalance"] },
+    "event_time":    { "type": "string" },
+    "producer":      { "type": "string" },
+
+    "data": { "$ref": "#/definitions/event_data" }
+  },
+
+  "required": [
+    "event_id",
+    "event_version",
+    "event_name",
+    "event_time",
+    "producer",
+    "data"
+  ]
+}
