@@ -16,8 +16,8 @@ end
 
 class KarafkaApp < Karafka::App
   setup do |config|
-    config.kafka.seed_brokers = %w[kafka://127.0.0.1:9092]
-    config.client_id = 'example_app'
+    config.kafka.seed_brokers = %w[kafka://kafka:9092]
+    config.client_id = 'billing'
     config.logger = Rails.logger
   end
 
@@ -46,7 +46,15 @@ class KarafkaApp < Karafka::App
     end
 
     topic :'accounts' do
-      consumer Accounts
+      consumer Account
+    end
+
+    topic :'tasks_life_cycle' do
+      consumer TaskLifeCycle
+    end
+
+    topic :'tasks_stream' do
+      consumer TaskChanges
     end
   end
 end

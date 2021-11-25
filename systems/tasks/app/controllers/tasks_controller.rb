@@ -22,12 +22,29 @@ class TasksController < ApplicationController
     @task = Task.create_task(creator: current_user, params: task_params)
 
     event = {
-      **Task.tasks_event_data,
-      event_name: 'TaskCreated',
-      data: { public_id: @task.public_id, title: @task.title, description: @task.description, creator: { public_id: @task.creator.public_id } }
+      event_name: 'Task.Created',
+      event_version: 2,
+      data: {
+        public_id: @task.public_id,
+        title: @task.title,
+        jira_id: @task.jira_id,
+        description: @task.description,
+        creator_public_id:  @task.creator.public_id
+      }
     }
 
-    WaterDrop::SyncProducer.call(event.to_json, topic: 'tasks_stream')
+    Producer.call(event: event, topic: 'tasks_stream')
+
+    event = {
+      event_name: 'Task.CagedBird',
+      event_version: 1,
+      data: {
+        public_id: @task.public_id,
+        assigned_to_public_id: @task.assigned_to.public_id
+      }
+    }
+
+    Producer.call(event: event, topic: 'tasks_life_cycle')
 
     respond_to do |format|
       if @task.save
@@ -40,14 +57,51 @@ class TasksController < ApplicationController
   end
 
   def reassign_all_open
-    Task.reassign_all_open(current_user)
+    Task.open.each do |task|
+      task.assign_to_user
+
+      event = {
+        event_name: 'Task.CagedBird',
+        event_version: 1,
+        data: {
+          public_id: task.public_id,
+          assigned_to_public_id: task.assigned_to.public_id
+        }
+      }
+
+      Producer.call(event: event, topic: 'tasks_life_cycle')
+    end
+
+    event = {
+      event_name: 'Task.Reassigned',
+      event_version: 1,
+      data: {
+        reassigned_by_public_id: current_user.public_id
+      }
+    }
+    Producer.call(event: event, topic: 'tasks_life_cycle')
 
     redirect_to tasks_path
   end
 
   def completed
     return if @task.assigned_to != current_user
+    return if @task.completed?
+
     @task.mark_completed
+
+    event = {
+      event_name: 'Task.MilletInBowl',
+      event_version: 1,
+      data: {
+        public_id: @task.public_id,
+        completed_by_public_id: @task.assigned_to.public_id
+      }
+    }
+
+    Producer.call(event: event, topic: 'tasks_life_cycle')
+
+    redirect_to tasks_path
   end
 
   private
@@ -58,7 +112,7 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:title, :description)
+      params.require(:task).permit(:title, :description, :jira_id)
     end
 
   def check_authentication
